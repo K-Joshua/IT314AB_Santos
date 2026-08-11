@@ -23,96 +23,145 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF6A1B9A), // Purple background
+      backgroundColor: Colors.deepPurple,
+
       appBar: AppBar(
         title: const Text("My First Flutter Application"),
-        backgroundColor: const Color(0xFF4A148C),
-        foregroundColor: Colors.white,
-        centerTitle: true,
+        backgroundColor: Colors.purple,
       ),
-      body: Center(
-        child: Card(
-          color: Colors.white,
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircleAvatar(
-                  radius: 55,
-                  backgroundImage: AssetImage('assets/Kanade-L.jpg'),
-                ),
-                const SizedBox(height: 20),
 
-                const Text(
-                  "Carl Joshua Santos",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple,
-                  ),
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
 
-                const SizedBox(height: 10),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
 
-                const Text(
-                  "BSIT-3",
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.black87,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                const Text(
-                  "My First Flutter Application",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.purple,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                const Text(
-                  "August 4, 2026",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey,
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
                   children: [
-                    Icon(
-                      Icons.favorite,
-                      color: Colors.pink,
+
+                    const CircleAvatar(
+                      radius: 50,
+                      backgroundImage:
+                      AssetImage('assets/Kanade-L.jpg'),
                     ),
-                    SizedBox(width: 8),
-                    Text(
-                      "Kanade Yoisaki",
+
+                    const SizedBox(height: 15),
+
+                    const Text(
+                      "Hello, I Am Bisaya",
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      "Carl Joshua Santos",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      "BSIT-3",
                       style: TextStyle(
                         fontSize: 18,
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      "My First Flutter Application",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      "August 11, 2026",
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text("Haluuuuuu"),
+                        SizedBox(width: 20),
+                        Text("RED"),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+            const Divider(),
+            const SizedBox(height: 10),
+
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+
+                child: Column(
+                  children: [
+                    const Text(
+                      "My Favorites",
+                      style: TextStyle(
+                        fontSize: 22,
                         color: Colors.deepPurple,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
+                    const SizedBox(height: 15),
+
+                    const Text(
+                      "Movie:Your Name",
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      "Games: Genshin Impact, Valorant, Hollow Knight",
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      "Activity: Sleep",
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Chip(
+                      label: Text("BelloWorld"),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    ElevatedButton(
+                      onPressed: () {
+                        print("I Like The CTU Engineering Student");
+                      },
+                      child: const Text("Secret Favourite"),
+                    ),
+
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
