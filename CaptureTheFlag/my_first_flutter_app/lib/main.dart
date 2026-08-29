@@ -17,19 +17,19 @@ class MainApp extends StatelessWidget {
 }
 
 class Profile {
-  final String? name;
-  final String? courseAndSection;
-  final int? age;
-  final String? hobby;
-  final double? height;
-  final bool? isStudent;
-  final int color;
-  final String picture;
-  final String? studentId;
-  final String? email;
-  final String? favoriteSubject;
-  const Profile(
-      { required this.name,  this.courseAndSection,  this.age,  this.hobby, required this.height, required this.isStudent, required this.color,required this.picture,    this.studentId,
+  String? name;
+  String? courseAndSection;
+  int? age;
+  String? hobby;
+  double? height;
+  bool? isStudent;
+  int color;
+  String picture;
+  String? studentId;
+  String? email;
+  String? favoriteSubject;
+  Profile(
+      {  this.name,  this.courseAndSection,  this.age,  this.hobby, required this.height, required this.isStudent, required this.color,required this.picture,    this.studentId,
         this.email,
         this.favoriteSubject,
       });
@@ -128,24 +128,25 @@ class _InteractiveFavButtonState extends State<InteractiveFavButton>
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return ElevatedButton(  
       onPressed: () {
         setState(() {
-          if (!isFavorite)
-          {
-            isFavorite = true;
-          }
-          else {
-            isFavorite = !isFavorite;
-          }
+          isFavorite = !isFavorite;
         });
       },
-
-      child: Text(
-        isFavorite
-          ? "♥ Favorited"
-          : "♡ Favorite",
-      ),
+      child: isFavorite ?   
+      const Icon(
+        Icons.favorite,
+        color: Colors.red,
+        size: 24.0,
+        semanticLabel: 'Make it Reddd',
+      ) :
+      const Icon(
+        Icons.favorite_border,
+        color: Colors.red,
+        size: 24.0,
+        semanticLabel: 'Not red',
+      )
     );
   }
 }
@@ -159,7 +160,7 @@ class Profiles extends StatefulWidget {
 
 class _ProfileState extends State<Profiles>
 {
-  bool isFavorite = false;
+  bool isDeleted = false;
 
   Widget profilesOfEachUser(Profile profile)
   {
@@ -193,7 +194,78 @@ class _ProfileState extends State<Profiles>
               Text(profile.studentId ?? "Not Provided",style: TextStyle(color: Colors.white)),
               Text(profile.email ?? "Not Provided",style: TextStyle(color: Colors.white)),
               Text(profile.favoriteSubject ?? "Not Provided",style: TextStyle(color: Colors.white)),
-              InteractiveFavButton()
+              InteractiveFavButton(),
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.white),
+                onPressed:  ()
+                {
+                  setState(() {
+                    profiles.remove(profile);
+                  });
+                }
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  TextEditingController nameController =TextEditingController(text: profile.name);
+                  TextEditingController hobbyController = TextEditingController(text: profile.hobby);
+                  TextEditingController favsubController = TextEditingController(text: profile.favoriteSubject);
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Edit Student'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              controller: nameController,
+                              decoration: const InputDecoration(
+                                labelText: 'Name',
+                              ),
+                            ),
+                            TextField(
+                              controller: hobbyController,
+                              decoration: const InputDecoration(
+                                labelText: 'Hobby',
+                              ),
+                            ),
+                            TextField(
+                              controller: favsubController,
+                              decoration: const InputDecoration(
+                                labelText: 'Favorite Subject',
+                              ),
+                            )
+                          ]
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                profile.name = nameController.text;
+                                profile.hobby = hobbyController.text;
+                                profile.favoriteSubject = favsubController.text;
+                              });
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Save'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+              
             ]
           ),
         ),
@@ -204,10 +276,7 @@ class _ProfileState extends State<Profiles>
   @override
   Widget build(BuildContext context) {
     profiles.sort((a,b) => (a.name ?? "").compareTo(b.name ?? ""));
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Wanted Kasi Mga Pogis and Pogas',
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: const Color(0xFFFFF8E7),
         appBar: AppBar(
           title: const Text("Doggie Profiles"),
@@ -230,7 +299,6 @@ class _ProfileState extends State<Profiles>
             return profilesOfEachUser(profiles[index]);
           },
         ),
-      )
     );
   }
 }
