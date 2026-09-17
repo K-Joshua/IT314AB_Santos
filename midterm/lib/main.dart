@@ -15,7 +15,11 @@ class MainApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: Colors.black
       ),
-      home: const Profile()
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const Profile(),
+        '/chat' : (context) => const Chat()
+      }
     );
   }
 }
@@ -53,12 +57,26 @@ List <Profiles> onMobile = [
   Profiles(status: 'Away - Riot Mobile', name: 'D1yah', icon: 2),
 ];
 
-class Profile extends StatelessWidget{
+class Profile extends StatefulWidget {
   const Profile({super.key});
 
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile>{
   Widget profileOfValoGamer(Profiles profile) {
-    return  
-      Padding(
+    return   GestureDetector(
+          onTap: ()
+          {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Chat(
+                
+              ))
+            );
+          },  
+          child: Padding(
         padding: const EdgeInsetsGeometry.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
@@ -71,6 +89,7 @@ class Profile extends StatelessWidget{
             ),
             Column(
               children: [
+
                 Text(profile.name ?? "Unknown", style: TextStyle(color: Colors.white70)),
                 Row(
                   children: [
@@ -83,9 +102,12 @@ class Profile extends StatelessWidget{
           ],
         )
       
-    );
+    )
+        );
+      
   }
 
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -167,7 +189,38 @@ class Profile extends StatelessWidget{
                   Text('  3', style: TextStyle(color: Colors.white10, fontWeight: FontWeight.bold),)
               ],
             ),
-            for (final p in onValorant) profileOfValoGamer(p),
+            Column(
+              children: [
+                ListView.builder(
+                itemCount: onValorant.length,
+                itemBuilder: (context, index){ 
+                return profileOfValoGamer(onValorant[index]);
+                },
+              ),
+              ]
+            ),
+              
+
+            Expanded(
+              child: onValorant.isEmpty
+                  ? const Center(
+                child: Text(
+                  "No students found.",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+                : ListView.builder(
+              itemCount: onValorant.length,
+              itemBuilder: (context, index) {
+                return profileOfValoGamer(onValorant[index]);
+              },
+            ), 
+            ),
+          
+            // for (final p in onValorant) profileOfValoGamer(p),
 
             Row(
               children: [
@@ -177,7 +230,25 @@ class Profile extends StatelessWidget{
               ],
             ),
 
-            for (final p in onMobile) profileOfValoGamer(p),
+            // for (final p in onMobile) profileOfValoGamer(p),
+            Expanded(
+              child: onMobile.isEmpty
+                  ? const Center(
+                child: Text(
+                  "No students found.",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+                : ListView.builder(
+              itemCount: onMobile.length,
+              itemBuilder: (context, index) {
+                return profileOfValoGamer(onValorant[index]);
+              },
+            ), 
+            ),
           ],
         ),
 
@@ -185,12 +256,42 @@ class Profile extends StatelessWidget{
 
 
 // Unya ka 
-
-
-
 // ============================================================
         ]
       ),
+    );
+  }
+}
+
+class Chat extends StatefulWidget {
+  const Chat({super.key});
+  
+  @override
+  State<Chat> createState() => _ChatState();
+}
+
+class _ChatState extends State<Chat>{
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black87,
+        title: const Text('Social', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))
+      ),
+      backgroundColor: Colors.black87,
+      body: Column(
+      
+      children: [
+        // ===================================================
+
+        // Later, Ill finish da builder first oki?
+
+        // =====================================================
+      ],
+
+
+      )
     );
   }
 }
