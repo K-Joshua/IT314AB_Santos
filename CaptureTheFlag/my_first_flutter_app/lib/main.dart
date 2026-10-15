@@ -28,13 +28,12 @@ class Profile {
   String? studentId;
   String? email;
   String? favoriteSubject;
+  bool isNotHidden;
   Profile(
-      {  this.name,  this.courseAndSection,  this.age,  this.hobby, required this.height, required this.isStudent, required this.color,required this.picture,    this.studentId,
-        this.email,
-        this.favoriteSubject,
+      {  this.name,  this.courseAndSection,  this.age,  this.hobby, required this.height, required this.isStudent, required this.color,required this.picture,    this.studentId, this.email, this.favoriteSubject, this.isNotHidden = true
       });
 }
-
+  
 List<Profile> profiles = [
   Profile(
     name: 'Name: Carl Joshua Santos',
@@ -46,6 +45,7 @@ List<Profile> profiles = [
     studentId: '2026-0001',
     email: 'carl@puti.com',
     favoriteSubject: 'Astronomy',
+    isNotHidden: true
   ),
 
   Profile(
@@ -59,6 +59,7 @@ List<Profile> profiles = [
     studentId: '2026-0002',
     email: 'anthony@example.com',
     favoriteSubject: 'Dismissal',
+    isNotHidden: true
   ),
 
   Profile(
@@ -71,6 +72,7 @@ List<Profile> profiles = [
     studentId: '2026-0003',
     email: 'armanes@puti.com',
     favoriteSubject: 'Recess',
+    isNotHidden: true
   ),
 
   Profile(
@@ -84,6 +86,7 @@ List<Profile> profiles = [
     studentId: '2026-0004',
     email: 'racaza@puti.com',
     favoriteSubject: 'Break',
+    isNotHidden: true
   ),
 
   Profile(
@@ -98,6 +101,7 @@ List<Profile> profiles = [
     studentId: '2026-0005',
     email: 'Ebarola@puti.com',
     favoriteSubject: 'Badminton',
+    isNotHidden: true
   ),
 
   Profile(
@@ -112,6 +116,7 @@ List<Profile> profiles = [
     studentId: '2026-0006',
     email: 'Lopez@puti.com',
     favoriteSubject: 'Scatter',
+    isNotHidden: true
   )
 ];
 
@@ -125,28 +130,56 @@ class InteractiveFavButton extends StatefulWidget{
 class _InteractiveFavButtonState extends State<InteractiveFavButton>
 {
   bool isFavorite = false;
+  bool isActive = true;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(  
-      onPressed: () {
-        setState(() {
-          isFavorite = !isFavorite;
-        });
-      },
-      child: isFavorite ?   
-      const Icon(
-        Icons.favorite,
-        color: Colors.red,
-        size: 24.0,
-        semanticLabel: 'Make it Reddd',
-      ) :
-      const Icon(
-        Icons.favorite_border,
-        color: Colors.red,
-        size: 24.0,
-        semanticLabel: 'Not red',
-      )
+    return Column(
+      children:[
+        ElevatedButton(  
+          onPressed: () {
+            setState(() {
+              isFavorite = !isFavorite;
+            });
+          },
+          child: isFavorite ?   
+          const Icon(
+            Icons.favorite,
+            color: Colors.red,
+            size: 24.0,
+            semanticLabel: 'Red Color for Favorite',
+          ) :
+          const Icon(
+            Icons.favorite_border,
+            color: Colors.red,
+            size: 24.0,
+            semanticLabel: 'Not red, Not Favorite',
+          )
+        ),
+
+        const SizedBox(height: 20),
+
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                isActive = !isActive;
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isActive ? Colors.green.shade900 : Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5)
+              )
+            ),
+            child: Text(
+              isActive ? "Active" : 'Inactive',
+              style: const TextStyle(
+                color: Colors.white
+              ),
+            ),
+          )
+        
+      ]
     );
   }
 }
@@ -160,14 +193,16 @@ class Profiles extends StatefulWidget {
 
 class _ProfileState extends State<Profiles>
 {
-  bool isDeleted = false;
+  bool isLoading = true;
+  List<Profile> loadedProfiles = [];
+  bool canProceed = false;
 
   Widget profilesOfEachUser(Profile profile)
   {
     return SizedBox(
       width: 350,
-      height: 400,
-      child: GestureDetector(
+      height: 550,
+      child: profile.isNotHidden ? GestureDetector(
         onTap: ()
         {
           print("Bellooo");
@@ -203,6 +238,14 @@ class _ProfileState extends State<Profiles>
                     profiles.remove(profile);
                   });
                 }
+              ),
+              IconButton(
+                icon: const Icon(Icons.hide_image, color: Colors.grey),
+                onPressed: () {
+                  setState(() {
+                    profile.isNotHidden = !profile.isNotHidden;
+                  });
+                },
               ),
               IconButton(
                 icon: const Icon(
@@ -269,21 +312,83 @@ class _ProfileState extends State<Profiles>
             ]
           ),
         ),
+      ) :
+      IconButton(
+        icon: const Icon(Icons.no_encryption_gmailerrorred_outlined, color: Colors.grey),
+        onPressed: () {
+          setState(() {
+            profile.isNotHidden = !profile.isNotHidden;
+          });
+        },
       )
     );
   }
 
+
+@override
+void initState() {
+  super.initState();
+  loadProfiles();
+}
+
+Future<void> loadProfiles() async {
+  setState(() {
+    isLoading = true;
+  });
+
+  try {
+    if (!mounted) return;
+
+    setState(() {
+      loadedProfiles = profiles;
+      isLoading = false;
+    });
+  } catch (e) {
+    if (!mounted) return;
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     profiles.sort((a,b) => (a.name ?? "").compareTo(b.name ?? ""));
-    return Scaffold(
+    return isLoading
+    ? const Center(
+        child: CircularProgressIndicator(),
+      )
+    : Scaffold(
         backgroundColor: const Color(0xFFFFF8E7),
         appBar: AppBar(
           title: const Text("Doggie Profiles"),
           backgroundColor: Colors.amber,
           centerTitle: true,
         ),
-        body: profiles.isEmpty
+        body:  isLoading
+          ? const Center(
+            child: CircularProgressIndicator(),
+          )
+          : !canProceed
+        ? Center(
+            child: Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.4,),
+                CircularProgressIndicator(),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      canProceed = true;
+                    });
+                  },
+                  child: const Text("Proceed"),
+                )
+              ]
+            ),
+          ) 
+          : profiles.isEmpty
             ? const Center(
           child: Text(
             "No students found.",
@@ -302,4 +407,3 @@ class _ProfileState extends State<Profiles>
     );
   }
 }
-
