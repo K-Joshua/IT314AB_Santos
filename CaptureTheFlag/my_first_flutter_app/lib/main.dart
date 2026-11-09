@@ -64,7 +64,7 @@ List<Profile> profiles = [
 
   Profile(
     name: 'Name: Armanes Christian Artajo',
-    hobby: 'Hobby: Playing Hearts',
+    hobby: 'Hobby: Playing Hearts ni zelon',
     height: 5.8,
     isStudent: true,
     color: 0xFF245B45,
