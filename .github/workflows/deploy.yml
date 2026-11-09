@@ -1,0 +1,62 @@
+name: Deploy Flutter Web to AWS Lightsail
+
+on:
+  push:
+    branches:
+      - feature/conditional-ui
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Build Flutter Web
+        working-directory: my_first_flutter_app
+        run: |
+          flutter pub get
+          flutter build web --release
+
+      - name: Prepare AWS folder
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: ${{ secrets.LIGHTSAIL_PORT }}
+          script: |
+            mkdir -p ~/flutter-web
+            rm -rf ~/flutter-web/*
+
+      - name: Upload Flutter Web files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: ${{ secrets.LIGHTSAIL_PORT }}
+          source: "my_first_flutter_app/build/web/*"
+          target: "~/flutter-web/"
+          strip_components: 3
+
+      - name: Deploy to Nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: ${{ secrets.LIGHTSAIL_PORT }}
+          script: |
+            set -e
+            sudo rm -rf /var/www/html/*
+            sudo cp -a ~/flutter-web/. /var/www/html/
+            sudo chown -R www-data:www-data /var/www/html
+            sudo nginx -t
+            sudo systemctl reload nginx
