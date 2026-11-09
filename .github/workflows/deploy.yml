@@ -24,6 +24,10 @@ jobs:
           flutter pub get
           flutter build web --release
 
+      - name: Verify Flutter build
+        run: |
+          ls -la CaptureTheFlag/my_first_flutter_app/build/web
+
       - name: Prepare AWS folder
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -42,9 +46,9 @@ jobs:
           username: ${{ secrets.LIGHTSAIL_USER }}
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
-          source: "my_first_flutter_app/build/web/*"
+          source: "CaptureTheFlag/my_first_flutter_app/build/web/*"
           target: "~/flutter-web/"
-          strip_components: 3
+          strip_components: 4
 
       - name: Deploy to Nginx
         uses: appleboy/ssh-action@v1.0.3
