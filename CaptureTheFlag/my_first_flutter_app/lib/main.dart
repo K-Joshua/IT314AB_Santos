@@ -36,7 +36,7 @@ class Profile {
   
 List<Profile> profiles = [
   Profile(
-    name: 'Name: Carl Joshua Santos',
+    name: 'Name:JEO ONG',
     hobby: 'Hobby: Sleeping',
     height: 5.8399,
     isStudent: true,
@@ -90,7 +90,7 @@ List<Profile> profiles = [
   ),
 
   Profile(
-    name: 'Name: Angeline Ebarola',
+    name: 'Name: Angeline Ebarola PAASA',
     courseAndSection: 'Course And Section: BCE-3',
     age: 20,
     hobby: 'Hobby: Sleeping',
