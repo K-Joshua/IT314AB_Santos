@@ -19,7 +19,7 @@ jobs:
           channel: stable
 
       - name: Build Flutter Web
-        working-directory: my_first_flutter_app
+        working-directory: CaptureTheFlag/my_first_flutter_app
         run: |
           flutter pub get
           flutter build web --release
